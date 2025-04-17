@@ -37,12 +37,11 @@ function M.preview()
 
     -- Execute the script with the current buffer path as argument
     local cmd = string.format('asyncapi start studio "%s" -p %d', current_buffer_path, M.config.port)
-    print(cmd)
 
     -- Run the doc generation command
     M.preview_job = vim.fn.jobstart(cmd, {
         on_exit = function(_, code)
-            if code == 0 then
+            if code ~= 0 then
                 vim.schedule(function()
                     vim.notify('Preview generation failed with code: ' .. code, vim.log.levels.ERROR)
                 end)
