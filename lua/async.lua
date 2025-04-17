@@ -9,17 +9,19 @@ M.config = default_config
 
 function M.setup(opts)
     for k, v in pairs(opts) do
-       if default_config[k] ~= nil then
-           default_config[k] = v
-       else
-           local err = string.format("Unexpected argument in options: %s", k)
-           vim.notify(err, vim.log.levels.ERROR)
-       end
+        if default_config[k] ~= nil then
+            default_config[k] = v
+        else
+            local err = string.format("Unexpected argument in options: %s", k)
+            vim.notify(err, vim.log.levels.ERROR)
+        end
     end
 
-    vim.fn.jobstart("npm install -g @asyncapi/cli", {
+    vim.fn.jobstart("npm list @asyncapi/cli || npm install -g @asyncapi/cli", {
         on_stderr = function(_, data)
-            vim.notify('Error installing dependency: ' .. vim.inspect(data), vim.log.levels.ERROR)
+            if string.find(string.lower(vim.inspect(data)), "error") then
+                vim.notify('Error installing dependency: ' .. vim.inspect(data), vim.log.levels.ERROR)
+            end
         end
     })
 
