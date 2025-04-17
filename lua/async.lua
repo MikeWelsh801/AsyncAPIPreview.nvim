@@ -5,6 +5,8 @@ local default_config = {
     ip = "localhost"
 }
 
+M.config = default_config
+
 function M.setup(opts)
     for k, v in pairs(opts) do
        if default_config[k] ~= nil then
@@ -15,7 +17,7 @@ function M.setup(opts)
        end
     end
 
-    vim.fn.jobstart("npm i", {
+    vim.fn.jobstart("npm install -g @asyncapi/cli", {
         on_stderr = function(_, data)
             vim.notify('Error installing dependency: ' .. vim.inspect(data), vim.log.levels.ERROR)
         end
